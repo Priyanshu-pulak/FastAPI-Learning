@@ -6,4 +6,4 @@ __pycache__/
 *.pyd
 # Byte-compiled / optimized / DLL files
 .DS_Store
-pydantic/
+.uv/
