@@ -1,45 +1,12 @@
-from fastapi import FastAPI, Path, HTTPException, Query
+from fastapi import FastAPI, Path, HTTPException, Query, status
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field, computed_field
+from pydantic import BaseModel, Field
 from typing import Annotated, Literal
 import json
+from src.models import PatientCreate, PatientResponse
 
 # Creating FastAPI app instance
 app = FastAPI()
-
-
-class Patient(BaseModel):
-    id: Annotated[
-        str, Field(..., description="Unique ID of the patient", exampless=["P001"])
-    ]
-    name: Annotated[str, Field(..., description="Full name of the patient")]
-    city: Annotated[str, Field(..., description="Current city of the patient.")]
-    age: Annotated[int, Field(..., gt=0, lt=110, description="Age of the patient")]
-    gender: Annotated[
-        Literal["male", "female", "other"],
-        Field(..., description="Gender of the patient"),
-    ]
-    height: Annotated[float, Field(..., gt=0, description="Height of the patient in m")]
-    weight: Annotated[
-        float, Field(..., gt=0, description="Weight of the patient in kg")
-    ]
-
-    @computed_field
-    @property
-    def bmi(self) -> float:
-        calculated_bmi = self.weight / (self.height**2)
-        return round(calculated_bmi, 2)
-
-    @computed_field
-    @property
-    def verdict(self) -> str:
-        if self.bmi < 18.5:
-            return "Underweight"
-        elif self.bmi < 25:
-            return "Normal"
-        else:
-            return "Obese"
-
 
 class PatientUpdate(BaseModel):
     name: Annotated[str | None, Field(None, description="Full name of the patient")]
@@ -126,8 +93,12 @@ def sort_patients(
     return sorted_data
 
 
-@app.post("/create")
-def create_patient(patient: Patient):
+@app.post(
+    "/create",
+    response_model=PatientResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_patient(patient: PatientCreate):
     # Load existing data
     data = load_data()
 
@@ -142,10 +113,7 @@ def create_patient(patient: Patient):
 
     # Save updated data back to file
     save_data(data)
-
-    return JSONResponse(
-        status_code=201, content={"message": "Patient record created successfully."}
-    )
+    return PatientResponse(**patient.model_dump())
 
 
 @app.put("/edit/{patient_id}")
@@ -169,7 +137,7 @@ def update_patient(
         existing_patient_info[key] = value
 
     # Converting to Patient model to recalculate bmi and verdict if height or weight is updated
-    updated_patient_info_pydantic = Patient(id=patient_id, **existing_patient_info)
+    updated_patient_info_pydantic = PatientResponse(id=patient_id, **existing_patient_info)
 
     # Converting back to dictionary
     existing_patient_info = updated_patient_info_pydantic.model_dump(exclude=["id"])
