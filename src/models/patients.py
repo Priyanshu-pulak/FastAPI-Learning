@@ -51,3 +51,29 @@ class PatientResponse(PatientBase):
             return 'Normal'
         else:
             return 'Obese'
+
+class PatientUpdate(BaseModel):
+    name: Annotated[
+        str | None,
+        Field(None, description="Full name of the patient", examples=["Priyanshu"])
+    ]
+    city: Annotated[
+        str | None,
+        Field(None, description="Current city of the patient.", examples=["Vellore"])
+    ]
+    age: Annotated[
+        int | None,
+        Field(None, ge=0, lt=110, description="Age of the patient", examples=[25])
+    ]
+    gender: Annotated[
+        Literal['male', 'female', 'other'] | None,
+        Field(None, description="Gender of the patient", examples=['male', 'female', 'other'])
+    ]
+    height: Annotated[
+        float | None,
+        Field(None, gt=0, description="Height of the patient in m", examples=[1.75])
+    ]
+    weight: Annotated[
+        float | None,
+        Field(None, gt=0, description="Weight of the patient in kg", examples=[70.5])
+    ]

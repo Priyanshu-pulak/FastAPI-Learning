@@ -1,3 +1,3 @@
-from .patients import PatientCreate, PatientResponse
+from .patients import PatientCreate, PatientUpdate, PatientResponse
 
-__all__ = ['PatientCreate', 'PatientResponse']
+__all__ = ['PatientCreate', 'PatientUpdate', 'PatientResponse']
