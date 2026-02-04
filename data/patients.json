@@ -1,13 +1,19 @@
 {
-    "P002": {
-        "name": "Ravi Mehta",
-        "city": "Mumbai",
-        "age": 34,
+    "P001": {
+        "name": "Priyanshu",
+        "city": "Vellore, Tamil Nadu",
+        "age": 25,
         "gender": "male",
         "height": 1.75,
-        "weight": 84.0,
-        "bmi": 27.43,
-        "verdict": "Obese"
+        "weight": 70.5
+    },
+    "P002": {
+        "name": "Ravi Mehta",
+        "city": "Vellore",
+        "age": 35,
+        "gender": "male",
+        "height": 1.72,
+        "weight": 80.5
     },
     "P003": {
         "name": "Sneha Kulkarni",
@@ -15,9 +21,7 @@
         "age": 22,
         "gender": "female",
         "height": 1.6,
-        "weight": 45,
-        "bmi": 17.58,
-        "verdict": "Underweight"
+        "weight": 45
     },
     "P004": {
         "name": "Arjun Verma",
@@ -25,9 +29,7 @@
         "age": 40,
         "gender": "male",
         "height": 1.8,
-        "weight": 90.0,
-        "bmi": 27.78,
-        "verdict": "Obese"
+        "weight": 90.0
     },
     "P005": {
         "name": "Neha Sinha",
@@ -35,9 +37,7 @@
         "age": 30,
         "gender": "female",
         "height": 1.55,
-        "weight": 75,
-        "bmi": 31.22,
-        "verdict": "Obese"
+        "weight": 75
     },
     "P006": {
         "name": "Prabal Dubey",
@@ -45,18 +45,6 @@
         "age": 18,
         "gender": "male",
         "height": 1.69,
-        "weight": 80.0,
-        "bmi": 28.01,
-        "verdict": "Obese"
-    },
-    "P001": {
-        "name": "Try",
-        "city": "Mumbai",
-        "age": 25,
-        "gender": "male",
-        "height": 1.3,
-        "weight": 80.0,
-        "bmi": 47.34,
-        "verdict": "Obese"
+        "weight": 80.0
     }
 }

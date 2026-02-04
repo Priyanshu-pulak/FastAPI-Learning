@@ -1,23 +1,11 @@
 from fastapi import FastAPI, Path, HTTPException, Query, status
 from fastapi.responses import JSONResponse
 from typing import Annotated
-import json
+from src.services import load_data, save_data
 from src.models import PatientCreate, PatientUpdate, PatientResponse
 
 # Creating FastAPI app instance
 app = FastAPI()
-
-
-def load_data():
-    with open("patients.json", "r") as file:
-        data = json.load(file)
-    return data
-
-
-def save_data(data):
-    with open("patients.json", "w") as file:
-        json.dump(data, file)
-
 
 @app.get("/")  # Defining path operation decorator for root endpoint
 @app.get("/about")
