@@ -7,29 +7,46 @@ from src.models import PatientCreate, PatientUpdate, PatientResponse
 # Creating FastAPI app instance
 app = FastAPI()
 
+
 @app.get("/")  # Defining path operation decorator for root endpoint
 @app.get("/about")
 def about():  # Defining path operation function
     return {"message": "A fully functional API for managing patient records."}
 
 
-@app.get("/patients")
-def view_patients():
+@app.get(
+    "/patients",
+    response_model=list[PatientResponse],
+    status_code=status.HTTP_200_OK,
+)
+def view_patients() -> list[PatientResponse]:
     data = load_data()
-    return data
+    return [PatientResponse(id=key, **value) for key, value in data.items()]
 
 
-@app.get("/patient/{patient_id}")  # Path Parameter example
+@app.get(
+    "/patient/{patient_id}",
+    response_model=PatientResponse,
+    status_code=status.HTTP_200_OK,
+)  # Path Parameter example
 def view_patient(
-    patient_id: str = Path(
-        ..., description="The ID of the patient to retrieve", examples="P001"
-    ),
-):
+    patient_id: Annotated[
+        str,
+        Path(
+            description="The ID of the patient to retrieve",
+            examples=["P001"],
+            min_length=4,
+        ),
+    ],
+) -> PatientResponse:
     data = load_data()
 
     if patient_id in data:
-        return data[patient_id]
-    raise HTTPException(status_code=404, detail="Patient not found.")
+        return PatientResponse(id=patient_id, **data[patient_id])
+    raise HTTPException(
+        status_code=404,
+        detail="Patient not found.",
+    )
 
 
 @app.get("/sort")
