@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Path, HTTPException, Query, status
 from fastapi.responses import JSONResponse
-from typing import Annotated
+from typing import Annotated, Literal
 from src.services import load_data, save_data
 from src.models import PatientCreate, PatientUpdate, PatientResponse
 
@@ -49,35 +49,34 @@ def view_patient(
     )
 
 
-@app.get("/sort")
+@app.get(
+    "/sort",
+    response_model=list[PatientResponse],
+    status_code=status.HTTP_200_OK,
+)
 def sort_patients(
-    sort_by: str = Query(
-        ..., description="Sort patients on basis of 'height' or 'weight'or 'bmi'"
-    ),
-    order: str = Query(
-        "asc", description="Sort by ascending : 'asc' or descending : 'desc' order"
-    ),
-):
-    valid_fields = ["height", "weight", "bmi"]
-
-    if sort_by not in valid_fields:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Invalid sort_by field. Select from {valid_fields}.",
-        )
-
-    if order not in ["asc", "desc"]:
-        raise HTTPException(
-            status_code=400, detail="Invalid order. Choose 'asc' or 'desc'."
-        )
-
+    sort_by: Annotated[
+        Literal["height", "weight", "bmi"],
+        Query(
+            description="Sort patients on basis of 'height' or 'weight'or 'bmi'",
+            examples=["height", "weight", "bmi"],
+        ),
+    ],
+    order: Annotated[
+        Literal["ascending", "descending"],
+        Query(
+            description="Sort by ascending or descending order",
+            examples=["ascending", "descending"],
+        ),
+    ],
+) -> list[PatientResponse]:
     data = load_data()
-
-    sorted_data = sorted(
-        data.values(), key=lambda x: x[sort_by], reverse=(order == "desc")
+    patients = [PatientResponse(id=key, **value) for key, value in data.items()]
+    patients.sort(
+        key=lambda patient: getattr(patient, sort_by),
+        reverse=(order == "descending"),
     )
-
-    return sorted_data
+    return patients
 
 
 @app.post(
