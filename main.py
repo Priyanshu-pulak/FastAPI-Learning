@@ -1,4 +1,10 @@
-from fastapi import FastAPI, Path, HTTPException, Query, status
+from fastapi import(
+    FastAPI, # FastAPI is a class which inherits from Starlette and provides all the functionality of Starlette, plus some additional features for building APIs.
+    Path,
+    HTTPException,
+    Query,
+    status
+)
 from typing import Annotated, Literal
 from src.services import load_data, save_data
 from src.models import PatientCreate, PatientUpdate, PatientResponse
@@ -7,8 +13,14 @@ from src.models import PatientCreate, PatientUpdate, PatientResponse
 app = FastAPI()
 
 
-@app.get("/")  # Defining path operation decorator for root endpoint
-@app.get("/about")
+# Defining path operation decorator for root endpoint
+@app.get(
+    "/" # Path is the last part of the URL starting from the first /
+        # Path is also called as endpoint or a route.
+)
+@app.get(
+    "/about" # Here path or route or endpoint is /about
+)
 def about():  # Defining path operation function
     return {"message": "A fully functional API for managing patient records."}
 
@@ -29,7 +41,7 @@ def view_patients() -> list[PatientResponse]:
     status_code=status.HTTP_200_OK,
 )  # Path Parameter example
 def view_patient(
-    patient_id: Annotated[
+    patient_id: Annotated[ # Function parameter name must be same which is Path parameter name. e.g here it must be patient_id otherwise FastAPI can't bind the path parameter to function parameter.
         str,
         Path(
             description="The ID of the patient to retrieve",
