@@ -180,5 +180,3 @@ def delete_patient(
 
     # Save updated data back to file
     save_data(data)
-
-    return
